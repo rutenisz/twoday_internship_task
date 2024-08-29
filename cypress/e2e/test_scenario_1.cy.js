@@ -74,7 +74,7 @@ describe("Website online shopping and checkout process", () => {
       cy.get(".showcart").should("contain.text", "7");
     });
 
-    it("should complete the shipping information form", () => {
+    it("should complete the shipping and billing information form", () => {
       cy.wait(3000);
       cy.get(".action.showcart").click();
       cy.wait(3000);
@@ -112,20 +112,12 @@ describe("Website online shopping and checkout process", () => {
         .and("contain", "Next")
         .click();
       cy.wait(3000);
+      // billing code
       cy.get("#billing-address-same-as-shipping-checkmo").check();
       cy.get("button.action.primary.checkout")
         .should("be.visible")
         .should("not.be.disabled")
         .click();
     });
-
-    // it("should complete the payment and review process", () => {
-    //   cy.url().should("include", "/checkout");
-    //   cy.get("#billing-address-same-as-shipping-checkmo").check();
-    //   cy.get("button.action.primary.checkout")
-    //     .should("be.visible")
-    //     .should("not.be.disabled")
-    //     .click();
-    // });
   });
 });
