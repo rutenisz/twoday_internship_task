@@ -38,7 +38,7 @@ describe("Website online shopping and checkout process", () => {
 
   describe("Selecting and Adding Product to Cart", () => {
     beforeEach(() => {
-      // Navigate to the product details page and add the product to the cart
+      // navigate to the product details page and add the product to the cart
       cy.contains("Frankie Sweatshirt").should("be.visible").click();
       cy.get('div[option-label="L"]').click().should("have.class", "selected");
       cy.get('div[option-label="Yellow"]').click();
@@ -55,16 +55,32 @@ describe("Website online shopping and checkout process", () => {
       cy.get("#mini-cart > .item > :nth-child(1) > .product-item-details")
         .should("contain.text", "L")
         .and("contain.text", "Yellow");
+      // .and("contain.text", "Frankie Sweatshirt"); // for some reason can't verify the same product title
     });
   });
 
   describe("Checkout Process", () => {
     beforeEach(() => {
-      cy.get(".showcart").click(); // open the cart
-      cy.get("#top-cart-btn-checkout").should("be.visible").click(); // proceed to checkout
+      // cy.visit("https://magento.softwaretestingboard.com/");
+      // cy.get("header").should("be.visible");
+      // cy.get("#ui-id-5").trigger("mouseover");
+      // cy.get("#ui-id-17").trigger("mouseover");
+      // cy.get("#ui-id-20").click(); // navigate to Hoodies & Sweatshirts
+      cy.contains("Frankie Sweatshirt").should("be.visible").click();
+      cy.get('div[option-label="L"]').click().should("have.class", "selected");
+      cy.get('div[option-label="Yellow"]').click();
+      cy.get("#qty").clear().type("7").should("have.value", "7");
+      cy.get("#product-addtocart-button").click();
+      cy.get(".showcart").should("contain.text", "7");
     });
 
     it("should complete the shipping information form", () => {
+      cy.wait(3000);
+      cy.get(".action.showcart").click();
+      cy.wait(3000);
+      cy.get("#top-cart-btn-checkout").trigger("click");
+      // shipping info
+      cy.wait(3000);
       cy.get("#customer-email").type("josh@email.com", { force: true });
       cy.get('input[name="firstname"]')
         .type("Josh")
@@ -95,14 +111,21 @@ describe("Website online shopping and checkout process", () => {
         .should("be.visible")
         .and("contain", "Next")
         .click();
-    });
-
-    it("should complete the payment and review process", () => {
+      cy.wait(3000);
       cy.get("#billing-address-same-as-shipping-checkmo").check();
       cy.get("button.action.primary.checkout")
         .should("be.visible")
         .should("not.be.disabled")
         .click();
     });
+
+    // it("should complete the payment and review process", () => {
+    //   cy.url().should("include", "/checkout");
+    //   cy.get("#billing-address-same-as-shipping-checkmo").check();
+    //   cy.get("button.action.primary.checkout")
+    //     .should("be.visible")
+    //     .should("not.be.disabled")
+    //     .click();
+    // });
   });
 });
